@@ -16,8 +16,8 @@ NTSTATUS CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
     UNREFERENCED_PARAMETER(DeviceObject);
 
     Irp->IoStatus.Status = STATUS_SUCCESS;
-	Irp->IoStatus.Information = 0;
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+    Irp->IoStatus.Information = 0;
+    IoCompleteRequest(Irp, IO_NO_INCREMENT);
     return STATUS_SUCCESS;
 }
 
@@ -85,8 +85,8 @@ NTSTATUS DeviceIoctl(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
     KeReleaseSpinLock(&myspinlock, irqlevel);
 
     Irp->IoStatus.Status = status;
-	Irp->IoStatus.Information = 0;
-	IoCompleteRequest(Irp, IO_NO_INCREMENT);
+    Irp->IoStatus.Information = 0;
+    IoCompleteRequest(Irp, IO_NO_INCREMENT);
     return status;
 }
 
@@ -105,8 +105,8 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 
     DriverObject->DriverUnload = UnloadFunc;
     DriverObject->MajorFunction[IRP_MJ_CREATE] = CreateClose;
-	DriverObject->MajorFunction[IRP_MJ_CLOSE] = CreateClose;
-	DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = DeviceIoctl;
+    DriverObject->MajorFunction[IRP_MJ_CLOSE] = CreateClose;
+    DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = DeviceIoctl;
     KeInitializeSpinLock(&myspinlock);
 
     status = IoCreateDevice(DriverObject, 0, &name, FILE_DEVICE_UNKNOWN, 0, FALSE, &DeviceObject);
