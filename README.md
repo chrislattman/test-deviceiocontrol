@@ -10,7 +10,7 @@ cl testdriver.c "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\km\x64\
 ren testdriver.exe testdriver.sys
 ```
 
-to compile the driver and rename the file to have the expected file extension. Run `make` to build the user space code. Then open an Administrator Command Prompt and run
+to compile the driver and rename the file to have the expected file extension. Run `make` in MSYS2 UCRT64 to build the user space code. Then open an Administrator Command Prompt and run
 
 ```
 sc create testdriver type= kernel binPath= C:\msys64\home\chris\test-deviceioctl\testdriver.sys
