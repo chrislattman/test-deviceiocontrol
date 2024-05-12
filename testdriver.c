@@ -11,7 +11,7 @@ static char *string;
 static KSPIN_LOCK myspinlock;
 static KIRQL irqlevel;
 
-NTSTATUS CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
+static NTSTATUS CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
 {
     UNREFERENCED_PARAMETER(DeviceObject);
 
@@ -22,7 +22,7 @@ NTSTATUS CreateClose(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
 }
 
 // the return value of this function is in GetLastError() if unsuccessful
-NTSTATUS DeviceIoctl(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
+static NTSTATUS DeviceIoctl(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
 {
     UNREFERENCED_PARAMETER(DeviceObject);
     PVOID inputBuffer, outputBuffer;
@@ -30,7 +30,7 @@ NTSTATUS DeviceIoctl(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
     NTSTATUS status = STATUS_SUCCESS;
     PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(Irp);
 
-    KeAcquireSpinLock(&myspinlock, &irqlevel);
+    KeAcquireSpinLock(&myspinlock, &irqlevel); // ProbeForRead and memcpy should be fast
     switch (stack->Parameters.DeviceIoControl.IoControlCode) {
     case RD_VALUE:
         outputBuffer = Irp->UserBuffer;
@@ -90,7 +90,7 @@ NTSTATUS DeviceIoctl(_In_ PDEVICE_OBJECT DeviceObject, _Inout_ PIRP Irp)
     return status;
 }
 
-void UnloadFunc(_In_ PDRIVER_OBJECT DriverObject)
+static void UnloadFunc(_In_ PDRIVER_OBJECT DriverObject)
 {
     IoDeleteSymbolicLink(&symlink);
     IoDeleteDevice(DriverObject->DeviceObject);
