@@ -13,7 +13,7 @@ int main(void)
 
     hDevice = CreateFileW(L"\\\\.\\testdriver", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hDevice == INVALID_HANDLE_VALUE) {
-        printf("Failed to open device");
+        fprintf(stderr, "Failed to open device\n");
         return 1;
     }
 
